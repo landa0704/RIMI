@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual del administrador · RIMI Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--b9:#00322B;--b6:#4F8226;--b1:#EAF3DD;--ink:#0C1F24;--tx:#2D3B38;--mu:#5E6E6A;--ln:#E3E8E1;--sun:#FCF3D2;--sky:#E3F3FC;--rose:#FDE7EC}
+*{box-sizing:border-box}body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--tx);margin:0;background:#FAFBF7;font-size:14px;line-height:1.6}
+main{max-width:980px;margin:0 auto;padding:40px 32px 80px;background:#fff}
+h1{color:var(--b9);font-size:32px;margin:0 0 6px;letter-spacing:-.02em}h2{color:var(--b9);font-size:22px;margin:42px 0 10px;padding-top:14px;border-top:2px solid var(--b1);page-break-after:avoid}
+h3{color:var(--ink);font-size:16px;margin:24px 0 6px;page-break-after:avoid}p{margin:6px 0 10px}
+.cover{display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:3px solid var(--b6);margin-bottom:24px}.cover img{height:44px}
+.sub{color:var(--mu)}.kicker{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--b6)}
+table{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:12.5px;page-break-inside:auto}th,td{border:1px solid var(--ln);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--b1);color:var(--b9);font-weight:700}tr{page-break-inside:avoid}td.c{text-align:center;font-weight:700}.y{color:var(--b6)}.n{color:#B9C2BE}
+.box{border-radius:12px;padding:12px 16px;margin:12px 0;border:1px solid var(--ln)}.tip{background:var(--b1);border-color:#D4E5BE}.warn{background:var(--sun);border-color:#F1DE9C}.info{background:var(--sky);border-color:#BFE3F7}
+code,.m{font-family:ui-monospace,Menlo,monospace;background:#F1F4EF;border-radius:5px;padding:1px 5px;font-size:12px}
+ol li,ul li{margin:3px 0}.path{font-weight:700;color:var(--b9)}
+nav.toc{background:#F4F8F1;border-radius:12px;padding:14px 20px;columns:2;font-size:13px}nav.toc a{color:var(--b9);text-decoration:none;display:block;padding:2px 0}
+@media print{body{background:#fff}main{padding:0;max-width:none}nav.toc{columns:2}a{color:inherit}}
+</style>
+</head>
+<body><main>
+<div class="cover"><img src="/static/img/solfrut-logo.png" alt="Solfrut"><div><div class="kicker">Grupo Phronesis · Solfrut · Genética Incarí</div><h1>Manual del administrador — RIMI Hub</h1><div class="sub">Perfiles, permisos, altas de usuarios, roles funcionales, Microsoft 365, constructor de formularios y flujo de trabajo. Versión noviembre 2026.</div></div></div>
+
+<nav class="toc">
+<a href="#c1">1. Conceptos clave: perfil, rol funcional y empresa</a><a href="#c2">2. Dónde se configura cada cosa</a><a href="#c3">3. Perfiles y permisos</a><a href="#c4">4. Roles funcionales y permisos extra</a><a href="#c5">5. Alta, edición y baja de usuarios</a><a href="#c6">6. Validación con Microsoft 365 (Entra ID)</a><a href="#c7">7. Constructor de formularios (agregar, editar y eliminar campos)</a><a href="#c8">8. Flujo de trabajo paso a paso</a><a href="#c9">9. Atributos de cada perfil y rol</a><a href="#c10">10. Recetas frecuentes</a><a href="#c11">11. Auditoría y buenas prácticas</a>
+</nav>
+
+<h2 id="c1">1. Conceptos clave</h2>
+<p>Cada usuario tiene tres atributos que, combinados, definen lo que ve y lo que puede hacer:</p>
+<table><tr><th style="width:18%">Atributo</th><th>Qué define</th><th style="width:30%">Ejemplo</th></tr>
+<tr><td><b>Perfil</b></td><td><b>Qué puede hacer</b>: el conjunto de permisos (crear fincas, crear proyectos, dictaminar, validar documentos, etc.). Se configura en una matriz. Podés crear perfiles nuevos.</td><td>Administrador, Responsable RIMI, Líder de proyecto, Compras, Impuestos, Contabilidad, Administración/Tesorería/Técnico, Sólo lectura, o uno propio.</td></tr>
+<tr><td><b>Rol funcional</b> (área)</td><td><b>Qué tareas le tocan</b>: las tareas automáticas de cada etapa se asignan por rol. También puede <b>sumar permisos extra</b> y habilita a mover la etapa cuando ese rol es el responsable de la etapa actual.</td><td>Responsable del Proyecto, Compras, Impuestos, Contabilidad, Tesorería, Personal técnico.</td></tr>
+<tr><td><b>Empresas</b></td><td><b>Qué datos ve</b>: un usuario sólo ve las zonas, fincas y proyectos de las empresas que tiene habilitadas.</td><td>Solfrut y/o Genética Incarí.</td></tr></table>
+<div class="box tip"><b>Regla de oro:</b> Permisos efectivos = permisos del <b>perfil</b> + permisos extra del <b>rol funcional</b>. El perfil Administrador tiene todo, más el acceso a Administración. Un perfil sin ningún permiso es de sólo lectura.</div>
+<p>Además, el <b>Responsable de un proyecto</b> (campo “Responsable del Proyecto” de la ficha) siempre puede editar <i>su</i> proyecto: la ficha, los bienes, el checklist, las tareas y el equipo, aunque su perfil no tenga los permisos generales.</p>
+
+<h2 id="c2">2. Dónde se configura cada cosa</h2>
+<p>Todo está en el menú lateral, en <span class="path">Administración</span> (visible sólo para el perfil Administrador).</p>
+<table><tr><th>Necesito…</th><th>Ir a</th></tr>
+<tr><td>Decidir qué puede hacer cada perfil (ej. “crear fincas”, “crear proyectos”)</td><td class="path">Administración → Perfiles y permisos</td></tr>
+<tr><td>Crear un perfil nuevo o renombrar uno existente</td><td class="path">Perfiles y permisos → Nuevo perfil / Editar</td></tr>
+<tr><td>Darle una capacidad puntual a un área sin cambiar el perfil de todos</td><td class="path">Administración → Roles funcionales → editar rol → “Permisos extra”</td></tr>
+<tr><td>Dar de alta a una persona, cambiarle el perfil, el rol o las empresas</td><td class="path">Administración → Usuarios y accesos</td></tr>
+<tr><td>Ingreso con cuentas corporativas, dominios permitidos y perfil del alta automática</td><td class="path">Administración → Microsoft 365 / Azure</td></tr>
+<tr><td>Agregar, editar, ordenar o eliminar campos de la ficha o de los bienes</td><td class="path">Administración → Constructor de formularios</td></tr>
+<tr><td>Etapas, plazos (SLA), responsables de etapa y tareas automáticas</td><td class="path">Administración → Flujo y tareas automáticas</td></tr>
+<tr><td>Empresas, tipos de proyecto, agenda recurrente, carpetas y documentos</td><td class="path">Administración → (sección correspondiente)</td></tr>
+<tr><td>Ver quién hizo qué</td><td class="path">Administración → Auditoría</td></tr></table>
+<div class="box info"><b>Responsable del Proyecto:</b> el rol funcional trae el permiso extra <b>“Crear y editar fincas”</b>, y el perfil <b>Líder de proyecto</b> incluye <b>“Crear proyectos”</b>. Así puede dar de alta la finca y después el proyecto. Si necesita crear zonas, marcá “Crear y editar zonas” en el perfil (Perfiles y permisos).</div>
+
+<h2 id="c3">3. Perfiles y permisos</h2>
+<h3>3.1 Perfiles base</h3>
+<table><tr><th>Perfil</th><th>Para quién</th><th>Particularidades</th></tr>
+<tr><td><b>Administrador</b></td><td>Sistemas / TI del grupo</td><td>Tiene todos los permisos y el acceso a Administración. Sus permisos no se pueden modificar. No podés quitarte este perfil a vos mismo.</td></tr>
+<tr><td><b>Responsable RIMI</b></td><td>Responsable del Régimen</td><td>Todo lo operativo, salvo eliminar proyectos. Mueve cualquier etapa, dictamina y configura tareas automáticas y agenda.</td></tr>
+<tr><td><b>Líder de proyecto</b></td><td>Responsables del Proyecto</td><td>Crea fincas y proyectos, edita su proyecto completo, sube documentos, crea tareas y escribe en el chat.</td></tr>
+<tr><td><b>Compras</b></td><td>Área de Compras</td><td>Proyectos y bienes (proveedores, OC), sube documentos, avanza desde Contratación.</td></tr>
+<tr><td><b>Impuestos</b></td><td>Área de Impuestos</td><td>Lo del líder de proyecto más dictamen fiscal (elegibilidad, NCM, BK/BIT) y validación de documentos.</td></tr>
+<tr><td><b>Contabilidad</b></td><td>Área de Contabilidad</td><td>Lo del líder de proyecto más validación de documentos. No dictamina ni cierra el proyecto.</td></tr>
+<tr><td><b>Administración, tesorería y técnico</b></td><td>Adm. local, Tesorería, Personal técnico</td><td>Sube comprobantes e informes, completa sus tareas y escribe en el chat. No valida documentos ni mueve etapas.</td></tr>
+<tr><td><b>Sólo lectura</b></td><td>Dirección, Directorio, Auditoría</td><td>Consulta todo lo de sus empresas, descarga documentos y reportes y marca notificaciones como leídas. No modifica nada.</td></tr></table>
+<p>Los perfiles base se pueden <b>renombrar y ajustar</b>, pero no eliminar.</p>
+<h3>3.2 Catálogo de permisos</h3>
+<table><tr><th style="width:14%">Grupo</th><th style="width:26%">Permiso</th><th>Qué habilita</th><th class="c">Admin</th><th class="c">RIMI</th><th class="c">Colab.</th><th class="c">Lect.</th></tr>
+<tr><td>Estructura</td><td>Crear y editar zonas</td><td>Alta, edición y baja de zonas geográficas</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Estructura</td><td>Crear y editar fincas</td><td>Alta, edición y baja de fincas dentro de una zona</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">— *</td><td class="c n">—</td></tr>
+<tr><td>Proyectos</td><td>Crear proyectos</td><td>Asistente de nuevo proyecto (Ficha de apertura)</td><td class="c y">✔</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td></tr>
+<tr><td>Proyectos</td><td>Editar fichas de proyecto</td><td>Ficha (Anexo I) y checklist de cualquier proyecto de sus empresas</td><td class="c y">✔</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td></tr>
+<tr><td>Proyectos</td><td>Mover cualquier etapa</td><td>Avanzar o retroceder aunque no sea el responsable de la etapa</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Proyectos</td><td>Dictamen y validación fiscal</td><td>Dictamen, elegibilidad, estado NCM, BK/BIT y secciones “Sólo RIMI/Impuestos”</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">— *</td><td class="c n">—</td></tr>
+<tr><td>Proyectos</td><td>Gestionar el equipo de cualquier proyecto</td><td>Sumar o quitar participantes</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Proyectos</td><td>Eliminar proyectos</td><td>Borra el proyecto con todo su contenido</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Inversiones</td><td>Cargar y editar bienes</td><td>Alta, edición, importación y estado de componentes</td><td class="c y">✔</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td></tr>
+<tr><td>Inversiones</td><td>Eliminar bienes en cualquier estado</td><td>Sin este permiso sólo se eliminan bienes “Identificada”</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Documentos</td><td>Subir documentos</td><td>Facturas, presupuestos, contratos, informes</td><td class="c y">✔</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td></tr>
+<tr><td>Documentos</td><td>Validar documentos</td><td>Marcar un documento como validado u observado</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">— *</td><td class="c n">—</td></tr>
+<tr><td>Documentos</td><td>Eliminar documentos de otros</td><td>Sin él, cada uno elimina sólo lo que subió</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Colaboración</td><td>Crear tareas</td><td>Tareas manuales y su asignación</td><td class="c y">✔</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td></tr>
+<tr><td>Colaboración</td><td>Gestionar cualquier tarea</td><td>Editar, reasignar o eliminar tareas de otros</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Colaboración</td><td>Escribir en conversaciones</td><td>Chat del proyecto y de cada inversión</td><td class="c y">✔</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td></tr>
+<tr><td>Configuración</td><td>Configurar tareas automáticas y agenda</td><td>Plantillas de tareas por etapa y agenda recurrente</td><td class="c y">✔</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td></tr>
+<tr><td>Administración</td><td>Acceso a Administración</td><td>Usuarios, perfiles, empresas, formularios, flujo, Microsoft 365 y auditoría</td><td class="c y">✔</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td></tr></table>
+<p class="sub">* Lo otorga el rol funcional: “Crear fincas” al Responsable del Proyecto; “Dictamen” y “Validar documentos” a Impuestos; “Validar documentos” a Contabilidad.</p>
+<h3>3.3 Cambiar permisos de un perfil</h3>
+<ol><li>Entrá a <span class="path">Administración → Perfiles y permisos</span>.</li><li>En la matriz, cada columna es un perfil y cada fila un permiso. Tildá o destildá las casillas.</li><li>Presioná <b>Guardar cambios</b>. Se aplican en la próxima acción de cada usuario, sin cerrar sesión.</li></ol>
+<h3>3.4 Crear un perfil nuevo</h3>
+<ol><li>En <b>Perfiles y permisos</b>, presioná <b>Nuevo perfil</b>.</li><li>Cargá el nombre, el color y la descripción. En “Copiar permisos de” elegí un perfil como punto de partida, o dejalo sin permisos (sólo lectura).</li><li>Guardá y ajustá los permisos en la matriz.</li><li>Asignalo a los usuarios desde <b>Usuarios y accesos</b>.</li></ol>
+<div class="box warn">Un perfil sólo se puede eliminar si ningún usuario lo tiene asignado. Los perfiles base no se eliminan.</div>
+
+<h2 id="c4">4. Roles funcionales y permisos extra</h2>
+<p>Los roles funcionales representan las áreas del procedimiento. Cumplen tres funciones:</p>
+<ol><li><b>Asignación automática de tareas:</b> al entrar un proyecto en una etapa, cada tarea de la plantilla se asigna al usuario del proyecto con ese rol o, si no hay, a un usuario con ese rol en la misma empresa.</li><li><b>Responsable de etapa:</b> quien tiene el rol de la etapa actual puede avanzar el proyecto (ej. Contabilidad avanza desde “Tratamiento contable”).</li><li><b>Permisos extra:</b> se suman a los del perfil.</li></ol>
+<table><tr><th>Rol funcional</th><th>Permisos extra configurados</th><th>Etapas de las que es responsable</th></tr>
+<tr><td>Responsable del Proyecto</td><td>Crear y editar fincas</td><td>Ficha en preparación · Recepción y comprobantes · Puesta en marcha</td></tr>
+<tr><td>Responsable RIMI</td><td>— (lo da su perfil)</td><td>Evaluación de elegibilidad · Control y permanencia · Cerrado</td></tr>
+<tr><td>Impuestos</td><td>Dictamen y validación fiscal · Validar documentos</td><td>— (tareas en Evaluación y Permanencia)</td></tr>
+<tr><td>Contabilidad</td><td>Validar documentos</td><td>Tratamiento contable · Gestión en SGI</td></tr>
+<tr><td>Compras</td><td>—</td><td>Contratación</td></tr>
+<tr><td>Administración local, Tesorería, Personal técnico</td><td>—</td><td>— (tareas en Recepción y Puesta en marcha)</td></tr>
+<tr><td>Dirección / Gerencias, Sistemas y TI</td><td>—</td><td>—</td></tr></table>
+<p><b>Para editar:</b> <span class="path">Administración → Roles funcionales</span> → lápiz → tildá los permisos en “Permisos extra que otorga este rol” → Guardar.</p>
+
+<h2 id="c5">5. Alta, edición y baja de usuarios</h2>
+<h3>5.1 Alta manual</h3>
+<ol><li><span class="path">Administración → Usuarios y accesos → Nuevo usuario</span>.</li><li>Completá correo, nombre, cargo y teléfono.</li><li>Elegí <b>Perfil</b> (qué puede hacer), <b>Rol funcional</b> (qué tareas le tocan) y <b>Empresas</b> (qué ve).</li><li>Guardá. El sistema muestra una <b>contraseña temporal</b>: copiala y enviala por un canal seguro. En el primer ingreso, el sistema obliga a cambiarla.</li></ol>
+<div class="box tip">Si la organización usa Microsoft 365, podés crear el usuario con el mismo correo corporativo: cuando ingrese con Microsoft, se vincula automáticamente a su cuenta y conserva el perfil, el rol y las empresas que le asignaste.</div>
+<h3>5.2 Edición, baja y recuperación</h3>
+<ul><li><b>Cambiar perfil, rol o empresas:</b> abrí el usuario y modificá los campos. El efecto es inmediato.</li><li><b>Baja:</b> desactivá al usuario. Se conserva su historial y no puede volver a ingresar, ni siquiera con Microsoft.</li><li><b>Olvido de contraseña:</b> “Restablecer contraseña” genera una nueva clave temporal.</li></ul>
+
+<h2 id="c6">6. Validación con Microsoft 365 (Entra ID)</h2>
+<p>RIMI Hub permite el inicio de sesión único (SSO) con las cuentas corporativas, usando OAuth 2.0 / OpenID Connect con PKCE. La contraseña la valida Microsoft (incluido MFA si está activo); el portal nunca la ve.</p>
+<h3>6.1 Lo que tiene que hacer Sistemas en Azure (una sola vez)</h3>
+<ol><li>En <b>portal.azure.com → Microsoft Entra ID → App registrations → New registration</b>: nombre “RIMI Hub”, tipo de cuenta <i>sólo este directorio organizativo</i> (single tenant).</li><li><b>Redirect URI</b> (plataforma Web): <code>https://&lt;dominio-definitivo&gt;/auth/microsoft/callback</code>. La URI exacta se muestra en <span class="path">Administración → Microsoft 365 / Azure</span>, con botón para copiar.</li><li><b>API permissions</b>: Microsoft Graph, delegados <code>openid</code>, <code>profile</code>, <code>email</code> y <code>User.Read</code> → <b>Grant admin consent</b>.</li><li><b>Certificates &amp; secrets → New client secret</b>: copiá el <i>Value</i> (no el ID) y anotá el vencimiento.</li><li>Desde la pantalla Overview, anotá el <b>Directory (tenant) ID</b> y el <b>Application (client) ID</b>.</li></ol>
+<h3>6.2 Cargar los datos en el servidor</h3>
+<p>Los datos se cargan como <b>secretos del servidor</b>, no en la base de datos ni en el navegador:</p>
+<table><tr><th>Secreto</th><th>Valor</th></tr><tr><td><code>MS_TENANT_ID</code></td><td>Directory (tenant) ID</td></tr><tr><td><code>MS_CLIENT_ID</code></td><td>Application (client) ID</td></tr><tr><td><code>MS_CLIENT_SECRET</code></td><td>Value del client secret</td></tr><tr><td><code>APP_URL</code></td><td>URL pública del portal, sin “/” al final</td></tr></table>
+<p>Cuando estén cargados, la pantalla de Microsoft 365 pasa de “Pendiente” a “Configurado”.</p>
+<h3>6.3 Políticas de acceso (en el portal)</h3>
+<table><tr><th>Opción</th><th>Efecto</th><th>Recomendación</th></tr>
+<tr><td>Mostrar botón “Ingresar con Microsoft 365”</td><td>Muestra el botón en la pantalla de ingreso</td><td>Activado</td></tr>
+<tr><td>Dominios permitidos</td><td>Sólo ingresan correos de esos dominios. Vacío = cualquier cuenta del tenant</td><td><code>solfrut.com.ar, geneticaincari.com.ar, phronesis.com.ar</code></td></tr>
+<tr><td>Alta automática en el primer ingreso</td><td>Si la persona no existe, se crea con el perfil por defecto, se le habilita la primera empresa y se avisa a los administradores</td><td>Activado durante el despliegue inicial, desactivado después</td></tr>
+<tr><td>Perfil por defecto del alta automática</td><td>Perfil con el que se crean los usuarios automáticos</td><td><b>Sólo lectura</b>: así nadie opera hasta que lo revises</td></tr>
+<tr><td>Permitir usuario y contraseña local</td><td>Mantiene el ingreso clásico</td><td>Activado sólo si hay asesores externos sin cuenta corporativa</td></tr></table>
+<h3>6.4 Cómo validar que funciona</h3>
+<ol><li>Con un usuario de prueba del dominio, presioná “Ingresar con Microsoft 365”. Debe aparecer la pantalla de Microsoft y luego volver al portal con la sesión iniciada.</li><li>Verificá en <b>Usuarios y accesos</b> que el usuario figure con origen Microsoft. Si fue un alta automática, asignale perfil, rol y empresas.</li><li>Probá con un correo de un dominio no permitido: debe mostrar “El dominio … no está habilitado”.</li><li>Desactivá un usuario e intentá ingresar: debe mostrar “Tu usuario está deshabilitado”.</li><li>Revisá <b>Auditoría</b>: allí quedan los ingresos y los intentos fallidos.</li></ol>
+<div class="box warn"><b>Errores frecuentes:</b> <i>AADSTS50011</i> significa que la Redirect URI no coincide (revisar <code>APP_URL</code> y la URI registrada, incluido https y sin barra final). <i>AADSTS7000215</i> indica un client secret inválido o vencido (se cargó el ID en lugar del Value, o venció). <i>AADSTS65001</i> aparece cuando falta el consentimiento del administrador. Agendá la renovación del secret antes de su vencimiento.</div>
+<p><b>Estado actual:</b> la integración está programada y probada en modo “no configurado”; faltan las credenciales que debe entregar Sistemas y el dominio definitivo del portal.</p>
+
+<h2 id="c7">7. Constructor de formularios</h2>
+<p>En <span class="path">Administración → Constructor de formularios</span> elegís “Ficha de proyecto” o “Inversión / bien”.</p>
+<ul><li><b>Agregar:</b> hacé clic en un tipo de campo de la paleta (texto, número, importe, fecha, lista, NCM, usuario…).</li><li><b>Editar:</b> con el lápiz cambiás etiqueta, sección, ancho, opciones, ayuda y si es obligatorio, visible o de sólo lectura.</li><li><b>Reordenar:</b> arrastrá campos entre secciones y secciones entre sí.</li><li><b>Eliminar:</b> con el ícono de papelera de la tarjeta (o “Eliminar campo” en el editor). El campo pasa a la <b>Papelera</b>, al final de la pantalla.</li><li><b>Restaurar:</b> en la Papelera, “Restaurar” devuelve el campo con los datos que ya tenía cargados.</li><li><b>Borrar definitivamente:</b> la ✕ de la Papelera, disponible sólo para campos personalizados.</li></ul>
+<table><tr><th>Tipo de campo</th><th>Eliminar (Papelera)</th><th>Borrar definitivamente</th></tr>
+<tr><td>Personalizado (creado por ustedes)</td><td class="c y">✔</td><td class="c y">✔</td></tr>
+<tr><td>Del sistema (Anexo I: fechas, presupuesto, dictamen…)</td><td class="c y">✔</td><td class="c n">— (queda en Papelera, puede figurar en reportes/Excel)</td></tr>
+<tr><td>Estructural (candado): Nombre, Código, Empresa, Zona, Tipo, Responsable · Descripción del bien</td><td class="c n">— (organizan los datos)</td><td class="c n">—</td></tr></table>
+<p>Al eliminar una sección, sus campos pasan a la Papelera. Si contiene un campo estructural, primero hay que moverlo a otra sección.</p>
+
+<h2 id="c8">8. Flujo de trabajo paso a paso</h2>
+<p>Estructura de datos: <b>Empresa → Zona → Finca → Proyecto → Inversiones (bienes)</b>. El proyecto recorre 9 etapas. En cada etapa se generan tareas automáticas para cada rol y se notifica al equipo. Puede mover la etapa: quien tenga “Mover cualquier etapa” (RIMI, Admin), el <b>rol responsable de la etapa actual</b>, o el Responsable del Proyecto mientras la ficha está en preparación.</p>
+<table><tr><th style="width:4%">#</th><th style="width:17%">Etapa (plazo)</th><th style="width:15%">Responsable de etapa</th><th>Qué se hace · tareas automáticas</th><th style="width:16%">Controles</th></tr>
+<tr><td>0</td><td>Estructura</td><td>RIMI / Admin (zonas) · Resp. proyecto (fincas)</td><td>Crear la zona y la finca si no existen.</td><td>—</td></tr>
+<tr><td>1</td><td>Ficha en preparación (10 d)</td><td>Responsable del Proyecto</td><td>Crear el proyecto, completar la Ficha (Anexo I) y cargar los componentes. <i>Tareas:</i> Resp. proyecto: completar la ficha y crear la carpeta digital · Compras: datos de proveedores.</td><td>Al enviar se avisa si faltan obligatorios o componentes</td></tr>
+<tr><td>2</td><td>Evaluación de elegibilidad (5 d)</td><td>Responsable RIMI</td><td>Analizar elegibilidad, ventana, NCM y monto mínimo. <i>Tareas:</i> RIMI: dictamen y comunicación · Impuestos: validar NCM y BK/BIT por componente.</td><td>Sólo RIMI/Impuestos editan los campos fiscales</td></tr>
+<tr><td>3</td><td>Tratamiento contable (3 d)</td><td>Contabilidad</td><td><i>Tareas:</i> Contabilidad: imputación y centro de costos en el ERP · RIMI: informar a Dirección y áreas.</td><td>Aviso si no hay dictamen</td></tr>
+<tr><td>4</td><td>Contratación</td><td>Compras</td><td><i>Tareas:</i> compra con facturación desagregada, selección de proveedor y control de facturas apócrifas (ARCA).</td><td>—</td></tr>
+<tr><td>5</td><td>Recepción y comprobantes</td><td>Responsable del Proyecto</td><td><i>Tareas:</i> Resp. proyecto: acta de recepción · Compras: guardar comprobantes · Administración: registro ERP · Tesorería: orden de pago y retenciones.</td><td>—</td></tr>
+<tr><td>6</td><td>Puesta en marcha</td><td>Responsable del Proyecto</td><td><i>Tareas:</i> Personal técnico: informe técnico firmado · Resp. proyecto: comunicar la fecha cierta y avisar para el SGI.</td><td>Hecho generador del beneficio</td></tr>
+<tr><td>7</td><td>Gestión en SGI (10 d)</td><td>Contabilidad</td><td><i>Tareas:</i> cargar el proyecto e inversiones, vincular comprobantes y registrar la puesta en marcha y los beneficios.</td><td>—</td></tr>
+<tr><td>8</td><td>Control y permanencia</td><td>Responsable RIMI</td><td><i>Tareas:</i> Impuestos: Certificado MiPyME y situación fiscal · RIMI: completitud de la carpeta digital.</td><td>—</td></tr>
+<tr><td>9</td><td>Cerrado</td><td>Responsable RIMI</td><td>Beneficio consolidado y legajo cerrado.</td><td>Consulta para todos</td></tr></table>
+<p>Cada bien tiene, además, su propio estado: Identificada → Dictaminada → Contratada/OC → Recibida → Registrada en ERP → Pagada → En marcha → Vinculada en SGI (o Baja).</p>
+<div class="box info"><b>Revisión realizada (noviembre 2026):</b> se recorrió un proyecto completo de las 9 etapas con los usuarios demo de cada área: 34 de 34 comprobaciones correctas. Se generaron 23 tareas automáticas, cada una asignada al área correcta, y se confirmaron los bloqueos esperados (Compras no crea fincas, el Resp. de proyecto no crea zonas ni dictamina, Tesorería no valida documentos, Dirección no escribe, Contabilidad no cierra el proyecto, RIMI no elimina proyectos).</div>
+
+<h2 id="c9">9. Atributos de cada perfil y rol</h2>
+<table><tr><th>Perfil</th><th>Ejemplo de usuario</th><th>Rol funcional</th><th>Puede</th><th>No puede</th></tr>
+<tr><td>Administrador</td><td>Christian Landaburu · Sistemas y TI</td><td>Sistemas y TI</td><td>Todo, incluida Administración y eliminar proyectos</td><td>Quitarse a sí mismo el perfil Administrador</td></tr>
+<tr><td>Responsable RIMI</td><td>Merlina Gottlieb</td><td>Responsable RIMI</td><td>Zonas, fincas, proyectos, mover cualquier etapa, dictamen, equipo, validar y eliminar documentos, tareas automáticas y agenda</td><td>Eliminar proyectos y entrar a Administración</td></tr>
+<tr><td>Líder de proyecto</td><td>Martín Balmaceda</td><td>Resp. del Proyecto</td><td>Crear fincas y proyectos, editar su proyecto completo, avanzar sus etapas (1, 5, 6), subir documentos, crear tareas y escribir en el chat</td><td>Crear zonas, dictaminar, validar documentos, mover etapas ajenas</td></tr>
+<tr><td>Compras</td><td>Emiliano Alberghini</td><td>Compras</td><td>Proyectos y bienes (proveedores, OC), subir documentos, avanzar desde Contratación</td><td>Crear fincas o zonas, campos fiscales, validar documentos</td></tr>
+<tr><td>Impuestos</td><td>Sandra Lozano</td><td>Impuestos</td><td>Lo del líder de proyecto más dictamen, NCM, BK/BIT y validar documentos</td><td>Mover etapas (salvo que se le otorgue)</td></tr>
+<tr><td>Contabilidad</td><td>Daniel Pereira</td><td>Contabilidad</td><td>Lo del líder de proyecto más validar documentos; avanzar desde Tratamiento contable y SGI</td><td>Dictaminar ni cerrar el proyecto</td></tr>
+<tr><td>Administración, tesorería y técnico</td><td>Ana María Moreno</td><td>Adm. local · Tesorería · Técnico</td><td>Subir comprobantes e informes, completar sus tareas y escribir en el chat</td><td>Validar documentos ni mover etapas</td></tr>
+<tr><td>Sólo lectura</td><td>Federico Ciribeni (Dirección / Gerencias / Finanzas)</td><td>Dirección / Gerencias / Finanzas</td><td>Consultar proyectos, reportes, calendario y documentos, y marcar notificaciones como leídas</td><td>Modificar nada ni escribir en el chat</td></tr></table>
+<p class="sub">Los usuarios iniciales ingresan con su cuenta corporativa de Microsoft 365. La cuenta local de prueba es admin@phronesis.com.ar. Cambiar su clave antes de producción.</p>
+
+<h2 id="c10">10. Recetas frecuentes</h2>
+<table><tr><th>Quiero…</th><th>Pasos</th></tr>
+<tr><td>Que el Responsable de proyecto también cree zonas</td><td>Roles funcionales → Responsable del Proyecto → tildar “Crear y editar zonas” → Guardar</td></tr>
+<tr><td>Que Contabilidad pueda dictaminar</td><td>Roles funcionales → Contabilidad → tildar “Dictamen y validación fiscal”</td></tr>
+<tr><td>Un auditor externo que sólo consulte una empresa</td><td>Usuarios → Nuevo → perfil Sólo lectura → empresa correspondiente</td></tr>
+<tr><td>Un perfil “Jefe de finca” que sólo maneje fincas y bienes</td><td>Perfiles → Nuevo perfil (sin permisos) → tildar “Crear fincas” y “Cargar y editar bienes” → asignarlo</td></tr>
+<tr><td>Que nadie elimine documentos ajenos salvo Admin</td><td>Perfiles → destildar “Eliminar documentos de otros” en Responsable RIMI</td></tr>
+<tr><td>Quitar un campo que no usamos</td><td>Constructor → papelera en la tarjeta del campo → Eliminar (restaurable desde la Papelera)</td></tr></table>
+
+<h2 id="c11">11. Auditoría y buenas prácticas</h2>
+<ul><li>Todo cambio de perfiles, roles, campos, etapas, documentos e ingresos queda en <b>Auditoría</b> y en el historial de cada proyecto.</li><li>Mantené al menos <b>dos administradores</b> activos.</li><li>Preferí ajustar <b>roles funcionales</b> para necesidades de un área y <b>perfiles</b> para cambios generales.</li><li>Con Microsoft 365, usá alta automática con perfil <b>Sólo lectura</b> y revisá las notificaciones de “Nuevo usuario”.</li><li>Antes de producción: desactivá los usuarios demo, cargá los secretos de Microsoft y definí los dominios permitidos.</li></ul>
+</main></body></html>
